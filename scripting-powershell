@@ -1,0 +1,120 @@
+<# 
+.SYNOPSIS 
+This is a script to assist sysadmins and netadmins with inventorying and security.
+
+.DESCRIPTION 
+This script provides a menu with a list of options for retrieving specific information. Information that is retrieved will and can be used for whatever 
+the admin sees fit. This includes but is not limited to: Installed Hotfixes on a specific machine along with, IP addresses, MAC addresses, Operating system 
+and version, and lastly Hostname.
+
+.EXAMPLE 
+MY-FIRST.ps1 
+This example starts the program and displays a menu with options for inventorying the specific computer system that it is ran on.
+
+.HELP
+if help is truly needed and one cannot figure out or have questions about this script..... than you should unplug your device and choose another career, this is just 
+not for you bo...
+#> 
+
+#written by Derrick Sharpe on 3/6/2020
+
+# INITIALIZATION 
+$menu_choice  =  “” 
+$menu  =  @” 
+Sharpes Inventory  System  Menu 
+================================================= 
+    H 	-  Installed  Hotfix 
+	  I	-  IP ADDRESS 
+    M   -  MAC ADDRESS
+    O   -  OPERATING SYSTEM
+    N   -  HOSTNAME
+	X 	-  Exit 
+================================================= 
+“@ 
+
+# This section contains variable declarations and assignments 
+# IP address 
+$IP_address = ""
+# Hostname 
+$Hostname = ""
+# MAC address
+$MAC_address = ""
+# Operating System
+$Operating_system = ""
+
+# FUNCTIONS 
+# This section contains function definitions 
+ 
+# MAIN BODY
+
+
+
+ 
+ 
+# This section contains the code that implements that main function of the script
+
+While  ($menu_choice -ne "X" )
+{
+    $menu
+    $menu_choice = Read-host -Prompt "Choose menu Option"
+switch ($menu_choice)
+{
+    'H' {
+        clear-host
+        Write-Host "Inventory of installed hotfixes"
+        $hotfix = Get-HotFix 
+        format-list -inputobject $hotfix
+        start-sleep -seconds 2
+        $menu_choice = ""
+
+    }
+   
+    'I' {
+        clear-host
+        Write-Host "Your IP addresses of the following network adapters"
+        $IP_address = Get-NetIPAddress 
+        format-list -inputobject $IP_address
+        start-sleep -seconds 2
+        $menu_choice = ""
+        }
+
+    'M' {
+        clear-host
+        Write-Host "Getting MAC address of user."
+        $MAC_address = Get-NetAdapter -Name "*" -physical -Verbose
+        format-list -inputobject $mac_address
+        start-sleep -seconds 2
+        $menu_choice = ""
+    }
+
+    'O' {
+        clear-host
+        Write-Host "Getting your Operating system and version of user node."
+        $Operating_system1 = (Get-Ciminstance Win32_OperatingSystem)
+        $Operating_system2 = (Get-Ciminstance Win32_OperatingSystem).version
+        Write-Host "Your Operating System is... '$Operating_system1'"
+        Write-Host "Your Version is... '$Operating_system2'"
+        start-sleep -seconds 2
+        $menu_choice = ""
+    }
+
+    'N' {
+        clear-host
+        Write-Host "Getting the hostname of this computer"
+        $Hostname = $env:computername
+        Write-Host " Your Hostnames system is. '$hostname'"
+        start-sleep -seconds 2
+        $menu_choice = ""
+    
+    }
+
+    'X' {
+         Write-host exiting
+        }
+    Default {
+  Write-Host "Wrong Dumbass try again!!!!!" 
+    }  
+     } #end of switch statement  
+ }     # end of loop statement
+    write-host "Until Next Time....."
+
